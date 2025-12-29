@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>H-EYE-V Assessment Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-red: #8B1A1A;
+            --accent-red: #D32F2F;
+            --cream-bg: #FFFDF5;
+            --cream-dark: #F5E6CC;
+            --text-dark: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Atkinson Hyperlegible Next', sans-serif;
+            background-color: #fce4ec;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .form-section {
+            width: 450px;
+            background: white;
+            padding: 30px;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.05);
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .form-section h2 {
+            color: var(--primary-red);
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .form-section p {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-red);
+            text-transform: uppercase;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f0f0f0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--accent-red);
+            outline: none;
+            background: var(--cream-bg);
+        }
+
+        .btn-download {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 700;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(139, 26, 26, 0.3);
+        }
+
+        .btn-download:hover {
+            background: var(--accent-red);
+            transform: translateY(-2px);
+        }
+
+
+        .preview-section {
+            flex: 1;
+            background: #444;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+
+        #permit-render {
+            width: 790px;
+            background: white;
+            padding: 25px;
+            box-sizing: border-box;
+            color: black;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .permit-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .logo-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin-bottom: 10px;
+        }
+
+        .logo-row img {
+            height: 70px;
+            width: auto;
+        }
+
+        .permit-header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: var(--primary-red);
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        .permit-header p {
+            font-size: 15px;
+            margin: 2px 0;
+            color: #333;
+        }
+
+
+        .p-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .p-table td {
+            border: 1px solid #000;
+            padding: 6px 10px;
+            height: 22px;
+        }
+
+        .bg-red {
+            background-color: var(--primary-red);
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .bg-cream {
+            background-color: var(--cream-dark);
+        }
+
+        .label-cell {
+            width: 140px;
+            font-weight: bold;
+        }
+
+        .photo-box {
+            width: 160px;
+            vertical-align: middle;
+            text-align: center;
+            background: #fafafa;
+        }
+
+        #preview-photo {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .data-val {
+            font-weight: 700;
+            color: var(--primary-red);
+            text-transform: uppercase;
+        }
+
+        .list-box {
+            font-size: 13px;
+            line-height: 1.3;
+        }
+
+        .signature-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .sig-line {
+            border-top: 1px solid black;
+            width: 80%;
+            margin: 40px auto 0;
+            padding-top: 5px;
+            font-size: 13px;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid black;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="form-section">
+            <h2>HEVCAT Registration</h2>
+            <p>Fill in your details to update the live permit preview.</p>
+
+            <div class="form-group">
+                <label>2x2 Photo Upload</label>
+                <input type="file" id="in_photo" accept="image/*" onchange="handleImage(this)">
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="in_name" placeholder="Ross Borja" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Applicant ID</label>
+                <input type="text" id="in_id" placeholder="2025-INITIALS" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Birthdate</label>
+                <input type="date" id="in_dob" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Home Address</label>
+                <input type="text" id="in_address" placeholder="739 E. Pantaleon" oninput="updatePreview()">
+            </div>
+
+            <div class="form-group">
+                <label>Examinee Type</label>
+                <select id="in_type" disabled>
+                    <option value="RESEARCHER">RESEARCHER</option>
+                </select>
+            </div>
+
+            <button class="btn-download" onclick="downloadPDF()">DOWNLOAD & PRINT PERMIT</button>
+        </div>
+
+
+        <div class="preview-section">
+            <div id="permit-render">
+                <div class="permit-header">
+                    <div class="logo-row">
+                       
+                        <img src="logo1.png">
+                        <img src="logo2.png">
+                        <img src="logo3.png">
+                    </div>
+                    <h1>H-EYE-V COMPETENCY ASSESSMENT TEST</h1>
+                    <p>BGY Cafe | 110 Senator Neptali A. Gonzales St, Mandaluyong City, 1550 Metro Manila</p>
+                </div>
+
+                <table class="p-table">
+                    <tr><td colspan="3" class="bg-red">Applicant's Information</td></tr>
+                    <tr>
+                        <td class="label-cell">Applicant ID</td>
+                        <td id="out_id" class="data-val">---</td>
+                        <td rowspan="5" class="photo-box">
+                            <img id="preview-photo" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect width='100' height='100' fill='%23eee'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='10' fill='%23999'%3E2X2 PHOTO%3C/text%3E%3C/svg%3E">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">Full Name</td>
+                        <td id="out_name" class="data-val">---</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">Birthdate</td>
+                        <td id="out_dob" class="data-val">---</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">Home Address</td>
+                        <td id="out_address" class="data-val">---</td>
+                    </tr>
+                    <tr>
+                        <td class="label-cell">Examinee Type</td>
+                        <td class="data-val">RESEARCHER</td>
+                    </tr>
+
+                    <tr><td colspan="3" class="bg-red">Examination Schedule</td></tr>
+                    <tr class="bg-cream">
+                        <td>Date: <b>01/02/2026</b></td>
+                        <td>Time: <b>2:00 PM</b></td>
+                        <td>Room: <b>25</b></td>
+                    </tr>
+                    <tr class="bg-cream">
+                        <td colspan="2">Venue: <b>BGY Cafe</b></td>
+                        <td>Examiner Signature:</td>
+                    </tr>
+                    <tr class="bg-cream">
+                        <td colspan="3">Control No.: <b>262770607</b></td>
+                    </tr>
+
+                    <tr><td colspan="3" class="bg-red">Reminders on your Examination Day</td></tr>
+                    <tr>
+                        <td colspan="3" class="list-box">
+                            <ol style="margin: 5px 0;">
+                                <li>Bring one (1) copy of originally-signed permit with 2X2 photo.</li>
+                                <li>Arrive 30 mins before scheduled time. Latecomers not allowed.</li>
+                                <li>Wear proper attire (T-shirt/Polo, long pants/skirt).</li>
+                                <li>Bring School ID or Government ID.</li>
+                                <li>Bring two (2) No. 2 pencils with eraser.</li>
+                            </ol>
+                        </td>
+                    </tr>
+
+                    <tr><td colspan="3" class="bg-red">Ground for Disqualification</td></tr>
+                    <tr>
+                        <td colspan="3" class="list-box">
+                            <ul style="margin: 5px 0;">
+                                <li>Failure to present a valid Test Permit.</li>
+                                <li>Use of notes, reviewers, or electronic devices during the test.</li>
+                                <li>Talking, signaling, or sharing answers with another examinee.</li>
+                            </ul>
+                        </td>
+                    </tr>
+
+                    <tr><td colspan="3" class="bg-red">Applicant's Pledge</td></tr>
+                    <tr>
+                        <td colspan="3" style="font-size: 10px; padding: 10px;">
+                            <div class="checkbox"></div>
+                            I hereby certify that all information stated above is true and correct. I understand that failure to read our own research paper may result in low scores.
+                        </td>
+                    </tr>
+
+                    <tr><td colspan="3" class="bg-red">Signatures</td></tr>
+                    <tr>
+                        <td colspan="3" style="height: 100px; vertical-align: top;">
+                            <div class="signature-area">
+                                <div>
+                                    <div id="sig_name" style="font-weight:bold; margin-top:25px;">---</div>
+                                    <div class="sig-line">Signature of Applicant</div>
+                                </div>
+                                <div>
+                                    <div style="margin-top:25px;">____________________</div>
+                                    <div class="sig-line">Date Signed</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function updatePreview() {
+            document.getElementById('out_name').innerText = document.getElementById('in_name').value || "---";
+            document.getElementById('sig_name').innerText = document.getElementById('in_name').value || "---";
+            document.getElementById('out_id').innerText = document.getElementById('in_id').value || "---";
+            document.getElementById('out_dob').innerText = document.getElementById('in_dob').value || "---";
+            document.getElementById('out_address').innerText = document.getElementById('in_address').value || "---";
+        }
+
+      
+        function handleImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-photo').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+ 
+        function downloadPDF() {
+            const element = document.getElementById('permit-render');
+            const name = document.getElementById('in_name').value || 'Examinee';
+            
+            const opt = {
+                margin: 0,
+                filename: 'H-EYE-V_Permit_' + name + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html>
